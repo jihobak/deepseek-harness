@@ -1,0 +1,61 @@
+{
+  "mode": "fresh kernel per notebook, RUN_LIVE=0",
+  "notebooks": [
+    {
+      "notebook": "00_reading_map.ipynb",
+      "code_cells": 2,
+      "status": "passed",
+      "seconds": 0.87
+    },
+    {
+      "notebook": "01_agent_loop.ipynb",
+      "code_cells": 2,
+      "status": "passed",
+      "seconds": 2.19
+    },
+    {
+      "notebook": "02_router_triggers.ipynb",
+      "code_cells": 2,
+      "status": "passed",
+      "seconds": 1.25
+    },
+    {
+      "notebook": "03_context_recall.ipynb",
+      "code_cells": 2,
+      "status": "passed",
+      "seconds": 1.35
+    },
+    {
+      "notebook": "04_full_duplex.ipynb",
+      "code_cells": 3,
+      "status": "passed",
+      "seconds": 0.71
+    },
+    {
+      "notebook": "05_plugin_lifecycle.ipynb",
+      "code_cells": 2,
+      "status": "passed",
+      "seconds": 1.18
+    },
+    {
+      "notebook": "06_persistence_watchdog.ipynb",
+      "code_cells": 3,
+      "status": "passed",
+      "seconds": 0.72
+    },
+    {
+      "notebook": "07_capstone.ipynb",
+      "code_cells": 2,
+      "status": "passed",
+      "seconds": 1.41
+    },
+    {
+      "notebook": "08_optional_live_model.ipynb",
+      "code_cells": 1,
+      "status": "passed",
+      "seconds": 2.05
+    }
+  ],
+  "live_model": "skipped; no request made",
+  "errors": 0
+}

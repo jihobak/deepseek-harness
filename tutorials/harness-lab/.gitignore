@@ -1,0 +1,8 @@
+.venv/
+.uv-cache/
+.ipython/
+.jupyter-runtime/
+.ipynb_checkpoints/
+__pycache__/
+sources/*.html
+sources/*.txt

@@ -1,0 +1,16 @@
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write tutorials/harness-lab/README.md
+/super-agent-notebook-lab:
+  en: d2242b345892624e
+  zh: 65d11bfc41fd54e0
+/super-agent-notebook-lab/summary:
+  en: f162e62abf817e90
+  zh: 02d11c3efee8c06a
+/super-agent-notebook-lab/run-the-course:
+  en: 68da786ac6fc0fec
+  zh: 31772d2362868b07
+/super-agent-notebook-lab/limitations:
+  en: c4cb9c488ce14f84
+  zh: dce55edca6999d29
