@@ -1,6 +1,6 @@
 # DeepSeek Super-agent 설계를 Python으로 배우기
 
-한국어 설명, 실행 코드, 검증문, 수정 과제와 해설을 담은 **9개 독립 실행 노트북**입니다. API 키 없이 LangChain 도구와 LangGraph의 상태 그래프·체크포인트·interrupt를 직접 실행합니다. 약 4~6시간을 예상하며 Python 함수·타입 힌트·기초 async 이해를 권장합니다.
+한국어 설명, 실행 코드, 검증문, 수정 과제와 해설을 담은 **12개 독립 실행 노트북**입니다. API 키 없이 LangChain 도구와 LangGraph의 상태 그래프·체크포인트·interrupt를 직접 실행합니다. 약 6~8시간을 예상하며 Python 함수·타입 힌트·기초 async 이해를 권장합니다.
 
 ## 먼저 구분할 것
 
@@ -8,6 +8,8 @@
 - 공식 Harness 제품 페이지는 공개 프리뷰와 Cordis의 “everything is a plugin” 구조를 소개합니다.
 - 이 자료는 설계를 Python으로 실험하는 교육용 구현입니다. 공식 SDK 튜토리얼, Cordis 재구현, 내부 Super-agent 전체의 공개 여부를 입증하는 자료가 아닙니다. 제품 구현 근거는 수집 시점의 체크아웃 문서로 한정합니다.
 - LangGraph도 병행 실행·상태·중단/재개를 지원합니다. 비교 대상은 단순한 단일 세션 중심 설계이며 모든 기존 agent framework를 일반화하지 않습니다.
+
+공개 프로토타입의 구현은 [한국어 분석 보고서](PROTOTYPE_ANALYSIS.ko.md)에 정리했습니다. 연구 글의 설계와 실제 코드의 차이를 먼저 확인하고, 09–11에서 권한·수명주기·장애 복구를 실습하세요.
 
 ## 시작하기
 
@@ -38,6 +40,9 @@ cd /workspace/deepseek-harness/tutorials/harness-lab
 |6|[Persistence와 Watchdog](notebooks/06_persistence_watchdog.ipynb)|SQLite 복원, 중복·오래된 결과 거부, 진전 감시|35분|
 |7|[통합 실습](notebooks/07_capstone.ipynb)|두 Worker 병행, 후속 사건 수신, LangGraph 승인/거절|45분|
 |8|[선택: 실제 모델](notebooks/08_optional_live_model.ipynb)|ChatOpenAI adapter와 별도의 모델 품질 평가|20분+|
+|9|[프로토타입 권한 판단](notebooks/09_prototype_admission.ipynb)|inferred 판단, observe/auto, 정책 버전, Mandate|35분|
+|10|[Ticket 수명주기](notebooks/10_prototype_ticket_lifecycle.ipynb)|구독과 권한, 사람/bot, 재개, 오래된 보고 거부|35분|
+|11|[영속 Effects](notebooks/11_prototype_durable_effects.ipynb)|SQLite 원자성, generation, 재시도와 외부 중복|40분|
 
 각 노트북은 이전 노트북의 변수에 의존하지 않습니다. 실습은 작은 고정 데이터와 모델 대역을 사용하므로 모델의 자연어 판단 품질을 입증하지 않습니다. 07의 후속 입력은 기록까지만 하며 실행 중 모델 지시 변경은 확장 과제입니다. 06의 Watchdog은 시간·진전 규칙으로, 원문의 LLM Watchdog의 의미 판단을 재현하지 않습니다.
 
@@ -52,7 +57,7 @@ UV_CACHE_DIR="$PWD/.uv-cache" uv run --frozen python scripts/validate_notebooks.
 
 학습자는 개념 설명 → 예상 결과 적기 → 실행 → assert 설명 → 수정 과제 순서로 진행하세요. 과제 해설은 마지막에 있습니다. 자동 검증은 제공된 예제를 검증하며 독자가 작성한 모든 확장 과제를 채점하지는 않습니다.
 
-`scripts/build_notebooks.py`는 원본 생성기입니다. 실행하면 학습자가 수정한 노트북과 실행 결과를 덮어쓰므로 재생성은 필요할 때만 하세요. 수정한 실습은 별도 사본에 보관하세요.
+`scripts/build_notebooks.py`는 00–08 생성기이며, `scripts/build_prototype_materials.py`는 09–11 생성기입니다. 두 생성기는 기존 실습에 프로토타입 차이 안내를 유지합니다. 실행하면 학습자가 수정한 노트북과 실행 결과를 덮어쓰므로 재생성은 필요할 때만 하세요. 수정한 실습은 별도 사본에 보관하세요.
 
 ## 실제 모델을 쓰려면
 

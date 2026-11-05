@@ -38,3 +38,9 @@
 |LangGraph 승인 interrupt|교육용 구현 선택|원문이 LangGraph를 사용한다는 주장 아님|
 
 LangChain/LangGraph API는 설치된 `uv.lock` 버전으로 실제 실행 검증합니다. API 동작 근거는 노트북의 실행 결과이며, DeepSeek가 해당 Python 라이브러리를 사용한다고 추론하지 않습니다.
+
+## 공개 프로토타입
+
+4. [deepseek-ai/dsh-superagent-prototype](https://github.com/deepseek-ai/dsh-superagent-prototype): Codex 클라우드에서 Git으로 복제해 README, docs/000–008, 도메인·정책·런타임·어댑터 및 관련 테스트를 읽었습니다. 공개용으로 조정된 연구 참고 구현이며 연구 글 또는 비공개 내부 버전과 동일하지 않습니다.
+
+[분석 보고서](PROTOTYPE_ANALYSIS.ko.md)에 주장별 코드·문서 근거와 09–11 실습 연결을 기록합니다. [prototype-evidence.json](sources/prototype-evidence.json)은 분석한 revision, 파일 SHA-256, 검사 명령과 결과를 보존합니다. Main 도구 구성, fan-out 순서, Watchdog/BYOM 구현 범위에 관한 차이는 00·02·06·07에도 표시했습니다. 위 표의 X 근거 항목은 연구 글의 설계를 설명하며 그대로 공개 코드의 구현 목록이 되지는 않습니다.

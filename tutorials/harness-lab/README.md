@@ -4,7 +4,7 @@ English | [中文](README.zh.md)
 
 ## Summary
 
-Explore Super-agent design through nine Korean notebooks using LangChain and LangGraph. The [Korean guide](GUIDE.ko.md) provides the learning path, exercises, and setup details; [sources](SOURCES.md) distinguish architecture proposals from product behavior. Python 3.12 or newer and uv are required. Core exercises use deterministic model substitutes and need no API key.
+Explore Super-agent design through twelve Korean notebooks using LangChain and LangGraph. The [Korean guide](GUIDE.ko.md) provides the learning path, exercises, and setup details; [sources](SOURCES.md) distinguish architecture proposals from product behavior. Python 3.12 or newer and uv are required. Core exercises use deterministic model substitutes and need no API key.
 
 ## Run the course
 

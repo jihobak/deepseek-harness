@@ -4,7 +4,7 @@
 
 ## 概述
 
-通过九个使用 LangChain 和 LangGraph 的韩文 Notebook 学习 Super-agent 设计。[韩文指南](GUIDE.ko.md)提供学习路线、练习和环境配置说明；[资料来源](SOURCES.md)区分架构提案与产品行为。需要 Python 3.12 或更高版本以及 uv。核心练习使用确定性的模型替代实现，无需 API 密钥。
+通过十二个使用 LangChain 和 LangGraph 的韩文 Notebook 学习 Super-agent 设计。[韩文指南](GUIDE.ko.md)提供学习路线、练习和环境配置说明；[资料来源](SOURCES.md)区分架构提案与产品行为。需要 Python 3.12 或更高版本以及 uv。核心练习使用确定性的模型替代实现，无需 API 密钥。
 
 ## 运行课程
 

@@ -1,0 +1,43 @@
+$ pnpm typecheck && pnpm test && pnpm build
+$ tsc --noEmit
+$ vitest run
+
+ RUN  v4.1.8 /workspace/dsh-superagent-prototype
+
+ ❯ tests/sources.spec.ts (71 tests | 1 failed) 4126ms
+     × takes in the event lines it reads, records each chat as direct or not, and reports a malformed line without stopping 74ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sources.spec.ts > feishu event consumer > takes in the event lines it reads, records each chat as direct or not, and reports a malformed line without stopping
+AssertionError: expected { state: 'ready', …(2) } to match object { state: 'error', …(1) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "detail": StringContaining "JSON",
+-   "state": "error",
++   "detail": "Listening for bot events",
++   "state": "ready",
+  }
+
+ ❯ tests/sources.spec.ts:1097:27
+    1095|     expect(['om_1', 'om_2'].map(id => store.triggers.get(feishuTrigger…
+    1096|     expect(store.get(KV.feishu.chats)).toEqual({ oc_group: false, oc_d…
+    1097|     expect(health.feishu).toMatchObject({ state: 'error', detail: expe…
+       |                           ^
+    1098|     controller.abort(); await running; store.close()
+    1099|   }, 20_000)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 58 passed (59)
+      Tests  1 failed | 1196 passed (1197)
+   Start at  22:24:26
+   Duration  21.28s (transform 3.50s, setup 0ms, import 11.60s, tests 38.17s, environment 6.48s)
+
+[ELIFECYCLE] Test failed. See above for more details.
+[ELIFECYCLE] Command failed with exit code 1.
