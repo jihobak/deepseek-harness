@@ -1,0 +1,12 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {parseClaude,parseOpenCode,plan,transient} from '../src/worker.ts';import type {Turn} from '../src/worker.ts';import {fixture} from './helpers.ts';
+test('Claude plan uses stdin and preserves session/worktree semantics',t=>{const f=fixture(t);const id=f.create();const ticket=f.engine.begin(id);
+  const turn:Turn={ticket,message:'untrusted $(text)',instructions:'host rules',env:{},signal:new AbortController().signal};const first=plan('claude-code',turn);
+  assert.ok(first.args.includes('--session-id'));assert.equal(first.input,turn.message);assert.ok(!first.args.includes(turn.message));
+  ticket.turn=2;assert.ok(plan('claude-code',turn).args.includes('--resume'));});
+test('Claude output preserves error classification and cost',()=>{const result=parseClaude(JSON.stringify({result:'overloaded',is_error:true,session_id:'s',api_error_status:529,total_cost_usd:0.1}),1);
+  assert.equal(result.ok,false);assert.equal(result.transient,true);assert.equal(result.costUsd,0.1);assert.throws(()=>parseClaude('not JSON',0));});
+test('OpenCode parser uses JSONL sessionID and last text event',()=>{const result=parseOpenCode([{type:'text',sessionID:'s',part:{text:'first'}},{type:'text',sessionID:'s',part:{text:'last'}}].map(x=>JSON.stringify(x)).join('\n'),0);
+  assert.equal(result.sessionId,'s');assert.equal(result.text,'last');assert.throws(()=>parseOpenCode('{}',0));});
+test('OpenCode first turn carries instructions, resume uses the saved id',t=>{const f=fixture(t);const id=f.create();const ticket=f.engine.begin(id);const turn:Turn={ticket,message:'task',instructions:'rules',env:{},signal:new AbortController().signal};
+  assert.match(plan('opencode',turn).args.at(-1)!,/<instructions>/);ticket.turn=2;assert.ok(!plan('opencode',turn).args.includes('--session'));ticket.sessionEstablished=true;assert.ok(plan('opencode',turn).args.includes('--session'));assert.equal(transient('invalid permission'),false);});

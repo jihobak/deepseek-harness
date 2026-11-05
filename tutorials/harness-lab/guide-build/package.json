@@ -1,0 +1,17 @@
+{
+  "name": "switch-dimension-guide-build-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24.9.0" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --test-isolation=none tests/*.test.ts",
+    "check": "npm run typecheck && npm test",
+    "start": "node src/app.ts",
+    "smoke": "node tests/smoke.mjs",
+    "stage": "node stage.mjs"
+  },
+  "dependencies": { "zod": "4.4.3" },
+  "devDependencies": { "@types/node": "24.10.0", "typescript": "6.0.3" }
+}

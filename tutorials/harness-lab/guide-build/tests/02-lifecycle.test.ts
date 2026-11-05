@@ -1,0 +1,22 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {stage} from '../src/engine.ts';import {fixture,trigger} from './helpers.ts';
+test('ready without PR ends; a later human message resumes the same session and branch',t=>{const f=fixture(t);const id=f.create();const first=f.engine.begin(id);
+  f.engine.command(id,first.turn,{command:'report',status:'ready'});f.engine.finish(id,first.turn,{ok:true},0);
+  assert.equal(f.engine.ticket(id).ended,'completed');f.engine.receive(trigger({id:'t2',addressed:false}));const second=f.engine.begin(id);
+  assert.equal(second.sessionId,first.sessionId);assert.equal(second.branch,first.branch);assert.equal(second.turn,2);});
+test('resumption rechecks original requester membership',t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);f.engine.command(id,1,{command:'report',status:'dropped'});f.engine.finish(id,1,{ok:true},0);
+  f.engine.config.allow=[];assert.equal(f.engine.receive(trigger({id:'t2',addressed:false})).kind,'ignored');assert.equal(f.engine.ticket(id).ended,'dropped');});
+test('PR registration is progress, readiness needs a separate report, all PRs must close',t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);
+  f.engine.command(id,1,{command:'report',status:'progress',pr:2});f.engine.command(id,1,{command:'report',status:'ready',pr:3});f.engine.finish(id,1,{ok:true},0);
+  assert.equal(stage(f.engine.ticket(id)),'awaiting-review');f.engine.closePR(2,'merged');assert.equal(f.engine.ticket(id).ended,undefined);f.engine.closePR(3,'closed');assert.equal(f.engine.ticket(id).ended,'closed');});
+test('CI pass does not wake idle work; CI fail wakes waiting but neither wakes blocked work',t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);f.engine.command(id,1,{command:'report',status:'waiting'});f.engine.finish(id,1,{ok:true},0);
+  f.engine.receive(trigger({id:'ci1',bot:true,ci:'pass'}));assert.equal(f.engine.ticket(id).wake,false);
+  f.engine.receive(trigger({id:'ci2',bot:true,ci:'fail'}));assert.equal(f.engine.ticket(id).wake,true);f.engine.begin(id);
+  f.engine.command(id,2,{command:'report',status:'blocked',question:'Choose target'});f.engine.finish(id,2,{ok:true},0);f.engine.receive(trigger({id:'ci3',bot:true,ci:'fail'}));assert.equal(stage(f.engine.ticket(id)),'awaiting-answer');});
+test('human input arriving during a turn is not lost when worker reports ready',t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);f.engine.receive(trigger({id:'t2',addressed:false}));
+  f.engine.command(id,1,{command:'report',status:'ready'});f.engine.finish(id,1,{ok:true},0);assert.equal(stage(f.engine.ticket(id)),'queued');assert.equal(f.engine.begin(id).turn,2);});
+test('recovery restores interrupted inputs and rejects the old turn',t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);f.engine.recover();
+  assert.match(f.engine.ticket(id).recovery,/Restart recovery/);assert.equal(f.engine.ticket(id).inputs[0].consumed,false);f.engine.begin(id);
+  assert.throws(()=>f.engine.command(id,1,{command:'report',status:'ready'}),/stale/);});
+test('transient failures retry three times then become visible failures',t=>{const f=fixture(t);const id=f.create();for(let n=0;n<4;n++){const run=f.engine.begin(id);f.engine.finish(id,run.turn,{ok:false,transient:true,error:'429'},10);}
+  assert.equal(f.engine.ticket(id).retries,3);assert.equal(stage(f.engine.ticket(id)),'failed');});

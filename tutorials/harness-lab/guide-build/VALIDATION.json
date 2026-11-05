@@ -1,0 +1,86 @@
+{
+  "recorded_at": "2026-11-06T08:55:03.397261+09:00",
+  "node": "v24.22.1",
+  "install": "npm ci --ignore-scripts: passed",
+  "typecheck": "npm run typecheck: passed",
+  "tests": 31,
+  "stages": [
+    {
+      "stage": "01",
+      "command": "npm run stage -- 01",
+      "tests": 6,
+      "exit_code": 0
+    },
+    {
+      "stage": "02",
+      "command": "npm run stage -- 02",
+      "tests": 7,
+      "exit_code": 0
+    },
+    {
+      "stage": "03",
+      "command": "npm run stage -- 03",
+      "tests": 6,
+      "exit_code": 0
+    },
+    {
+      "stage": "04",
+      "command": "npm run stage -- 04",
+      "tests": 4,
+      "exit_code": 0
+    },
+    {
+      "stage": "05",
+      "command": "npm run stage -- 05",
+      "tests": 5,
+      "exit_code": 0
+    },
+    {
+      "stage": "06",
+      "command": "npm run stage -- 06",
+      "tests": 3,
+      "exit_code": 0
+    }
+  ],
+  "smoke": "real local git worktree and two commits; same session/branch; sa HTTP token; blocked/stop; origin rejection; restart",
+  "concurrent_smoke_processes": [
+    "passed",
+    "passed"
+  ],
+  "live_cli": "not installed; plans and output parsers tested with fixtures",
+  "github": "normalization and cursors tested with fixtures; no remote writes",
+  "not_verified": [
+    "Claude/OpenCode current flags, authentication, live model calls or costs",
+    "GitHub Reader/Sender transport and PR/review/CI polling",
+    "Docker/Compose and crash cleanup of old live workers",
+    "Exactly-once external delivery"
+  ],
+  "source_sha256": {
+    "bin/sa": "fe850143dcd5314b941df834c6fb405b592fba5848c3076be6a6d57b51a8de9f",
+    "package-lock.json": "284925895818cbfe88b54a0d31303f0ef66e19716ddb9203880ddb83a525d78a",
+    "package.json": "c4d467ac4fb9e32e912b5eb34a60fc537915983ce024eed1922c27da6c50f2fe",
+    "prompts/worker.md": "68c985143aacf2db79d8ecbaaa7ae68065999bb34ef94a7c8c3ee9893d5b351f",
+    "src/app.ts": "47a75b800eb87e4c9a2c80e47392929368f7262cce7473d80d79332fa8035d29",
+    "src/engine.ts": "2f22dd0a7c81143e9e219b632c0ea40bb80d9c372dcf7a5afa6785acda45ad78",
+    "src/executor.ts": "b19667572497b3e7a85c76cd29b363ed44151540adc38decdee7eca542a69f98",
+    "src/github.ts": "be6cdd9f818f15e5ed76767ee6888b7a80c05739a3037017b0178e10ae4ea3ca",
+    "src/http.ts": "ffc2c3a415a993931d342e04ed24f2db8d0a0f4ef2333f770a198a5d354358bd",
+    "src/mock-worker.ts": "29951a7d9de1ff18be081f101061f9ef153396217f77d227741b38e2f50e45a0",
+    "src/model.ts": "58a5d834247e9e3adba35fe922c22e1f05b52cd9b56505aedf5d6426cca368a6",
+    "src/outbox.ts": "a546abc17d4f28c121c247783d3718e322dc546eb81719dbea2699f4f8efcdcf",
+    "src/process.ts": "d7dd2be88b415a854b34e47805c7aed6df26d7daee45a5e314274593feb2c86b",
+    "src/sa.ts": "c8ba400a5268d4da90ad77e7ee8a1b80b4dd15a9337cc4024739a8afd4701ac5",
+    "src/store.ts": "b83acf8b010f093276c3ab03334d93e80d11f40f3ae95654520454a11844d46f",
+    "src/worker.ts": "98378f0b0a6b4a6bf6f0ffe0b5804d0e3689f065533f8afb3166d615442a12c5",
+    "src/workspace.ts": "ecf5f6aaa61ef325852f2c6e3fefd8cc50091824fc5e44f9e43a926bb183be29",
+    "stage.mjs": "59d98a5a86db52d18d691af2cbd972a380127e287c6648c76d0cdb60a0faa0ab",
+    "tests/01-gate.test.ts": "fb0e233ac4eff4e3691963055706ab8cf747b958bd8b15881fbdcf7db4c4a0e8",
+    "tests/02-lifecycle.test.ts": "0e31cbf2b0be4e7243b29eb4daef7d0f16a6f18581b3c9ea3652012e75c9fac0",
+    "tests/03-contract.test.ts": "0e0e07902b3ddab11adacfeefe629cc1a552b7039cf5999baab350564cd23a3d",
+    "tests/04-adapters.test.ts": "99ebf9c674e3dc5d85a719b916d18ca291be17c57d621eef921560ef5c470dc2",
+    "tests/05-source-outbox.test.ts": "5f5ee314ee65d7d0d1e46ea050758b99946969b5210d9f1e74d3dce4a76bed6a",
+    "tests/06-execution.test.ts": "1aa21e609987edfa148115881f79e51a179d3443375eb8ba681acde4c4452efb",
+    "tests/helpers.ts": "ab1beec7646101a3243793406ed8550b1c672631918eea187c4f9a1eadcea18b",
+    "tests/smoke.mjs": "6b5caf10fd90719b2e7e4bc59f4a5909f5bc60da2f55bc648f1546585875b834"
+  }
+}

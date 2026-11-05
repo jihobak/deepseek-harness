@@ -1,0 +1,16 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {Tokens} from '../src/executor.ts';import {parseCommand} from '../src/sa.ts';import {fixture,trigger} from './helpers.ts';import type {Message} from '../src/model.ts';
+test('ack is once per trigger and replies cannot target another task',t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);
+  f.engine.command(id,1,{command:'ack',text:'Working'});f.engine.command(id,1,{command:'ack',text:'Again'});assert.equal(f.store.all('message').length,1);
+  assert.throws(()=>f.engine.command(id,1,{command:'reply',to:'unknown',text:'Hello'}),/did not reach/);});
+test('word limit and progress-message prohibition are host checks',t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);
+  assert.throws(()=>f.engine.command(id,1,{command:'ack',text:Array(11).fill('word').join(' ')}),/word limit/);
+  assert.throws(()=>f.engine.command(id,1,{command:'report',status:'progress',message:'noise'}),/progress/);assert.equal(f.store.all('message').length,0);});
+test('blocked question becomes attention; dropped remains silent',t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);
+  f.engine.command(id,1,{command:'report',status:'blocked',question:'Which color?'});assert.equal(f.store.all<Message>('message')[0].purpose,'attention');
+  f.engine.command(id,1,{command:'report',status:'dropped',message:'Do not publish'});assert.equal(f.store.all('message').length,1);});
+test('handback is one-shot and does not bypass the allowlist',t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);f.engine.receive(trigger({id:'t2',actor:'eve',addressed:false}));
+  const result=f.engine.command(id,1,{command:'handback',trigger:'t2',reason:'out of scope'}) as {kind:string};assert.equal(result.kind,'ignored');
+  assert.throws(()=>f.engine.command(id,1,{command:'handback',trigger:'t2',reason:'again'}),/cannot hand back/);});
+test('tokens identify a ticket and turn, expire explicitly, and are not stored raw',()=>{const t=new Tokens();const token=t.issue('one',2);assert.deepEqual(t.resolve(token),{id:'one',turn:2});assert.equal([...t.values.keys()].includes(token),false);t.revoke(token);assert.equal(t.resolve(token),undefined);});
+test('sa parses quoted text and rejects unknown command fields',()=>{assert.deepEqual(parseCommand(['report','blocked','--question','Which target?']),{command:'report',status:'blocked',question:'Which target?',pr:undefined,summary:undefined,message:undefined,to:undefined});assert.throws(()=>parseCommand(['report','invented']));});

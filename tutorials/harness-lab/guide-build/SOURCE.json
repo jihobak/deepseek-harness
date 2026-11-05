@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/switch-dimension/deepseek-superagent-guide",
+  "revision": "b046f7d6973cbb99c109a4195b3cd5af0a563b13",
+  "branch": "main",
+  "observed_at": "2026-11-06T08:52:25.376515+09:00",
+  "tracked_files": [
+    "LICENSE",
+    "README.md"
+  ],
+  "sha256": {
+    "README.md": "4aecb062c088f295ee7a76fb52c7bd46d75919ef5dcdfc593de474792743a4eb",
+    "LICENSE": "d26f63b2073b36dba7bb21cce8fd533a92b1d36f01261357600b12ac955a927f"
+  },
+  "finding": "README mentions an approximately 2800-line TypeScript implementation including tests, but this checkout contains no app source. Publication elsewhere was not determined.",
+  "course_relation": "Independent educational implementation derived from the README specification, not a recovery of the referenced app source.",
+  "cli_availability": {
+    "claude": "not installed in this environment",
+    "opencode": "not installed in this environment"
+  }
+}

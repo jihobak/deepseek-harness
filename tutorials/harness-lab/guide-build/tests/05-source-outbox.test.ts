@@ -1,0 +1,15 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {normalizePages,poll} from '../src/github.ts';import {AGENT_HEADER,DeliveryError,flush} from '../src/outbox.ts';import type {Message} from '../src/model.ts';import {fixture} from './helpers.ts';
+const row={id:10,body:'@robot fix',issue_url:'https://api.github.com/repos/a/b/issues/2',user:{login:'alice',type:'User'}};
+test('poll parsing handles pages, bot identity, and exact login mentions',()=>{const rows=normalizePages([[row],[{...row,id:11,body:'@robot-extra',user:{login:'ci[bot]',type:'User'}}]],'issues/comments','a/b','robot','2026-01-01T00:00:00Z');
+  assert.equal(rows.length,2);assert.equal(rows[1].bot,true);assert.equal(rows[1].addressed,false);assert.equal(rows[0].thread,'github:a/b#2');});
+test('first poll starts now; failure holds only its own cursor',async t=>{const f=fixture(t);let calls=0;const reader={async read(endpoint:string){calls++;if(endpoint==='pulls/comments')throw new Error('404');return [];}};
+  await poll(f.engine,reader,100_000);assert.equal(calls,0);await poll(f.engine,reader,130_000);
+  assert.equal(f.store.get('cursor','issues'),new Date(120_000).toISOString());assert.equal(f.store.get('cursor','pulls/comments'),new Date(100_000).toISOString());});
+test('outbox retries head message before later messages in the same conversation',async t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);f.engine.command(id,1,{command:'ack',text:'Working'});f.engine.command(id,1,{command:'reply',to:'t1',text:'Answer'});
+  let first=true;const sent:string[]=[];const sender={async send(m:Message,body:string){assert.ok(body.startsWith(AGENT_HEADER));if(first){first=false;throw new Error('temporary');}sent.push(m.id);}};
+  await flush(f.store,sender,0);await flush(f.store,sender,4999);assert.equal(sent.length,0);await flush(f.store,sender,5000);assert.equal(sent.length,1);await flush(f.store,sender,5001);assert.equal(sent.length,2);});
+test('permanent delivery refusal records dropped and unblocks the next message',async t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);f.engine.command(id,1,{command:'ack',text:'hello'});
+  await flush(f.store,{async send(){throw new DeliveryError('410 gone',true);}},0);assert.equal(f.store.all<Message>('message')[0].state,'dropped');});
+test('domain and outbox rollback together when validation refuses a report',t=>{const f=fixture(t);const id=f.create();f.engine.begin(id);
+  assert.throws(()=>f.engine.command(id,1,{command:'report',status:'ready',pr:42,to:'missing',message:'result'}));assert.equal(f.engine.ticket(id).prs.length,0);assert.equal(f.store.all('message').length,0);});
