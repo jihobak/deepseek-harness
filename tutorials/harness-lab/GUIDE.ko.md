@@ -46,6 +46,10 @@ cd /workspace/deepseek-harness/tutorials/harness-lab
 
 각 노트북은 이전 노트북의 변수에 의존하지 않습니다. 실습은 작은 고정 데이터와 모델 대역을 사용하므로 모델의 자연어 판단 품질을 입증하지 않습니다. 07의 후속 입력은 기록까지만 하며 실행 중 모델 지시 변경은 확장 과제입니다. 06의 Watchdog은 시간·진전 규칙으로, 원문의 LLM Watchdog의 의미 판단을 재현하지 않습니다.
 
+## 처음부터 TypeScript로 구현하기
+
+[Super-agent 재구현 과정](rebuild/INDEX.ko.md)은 요구사항에서 출발해 업무 모델, 권한, 구독, SQLite Effects, 실행 복구, 어댑터, 운영 화면을 단계별로 만듭니다. 01–08은 실행 가능한 참조 구현과 단계별 테스트를 제공하고, 09–10은 원본 DSH·GitHub·Feishu·운영 기능까지 확장하는 구현 지침과 완료 기준을 제공합니다. Python 노트북과 별도의 Node 환경을 사용합니다.
+
 ## 전체 실행 검증
 
 ```bash
