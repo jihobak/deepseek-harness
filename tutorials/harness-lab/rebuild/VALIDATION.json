@@ -1,0 +1,98 @@
+{
+  "recorded_at_utc": "2026-11-05T23:06:45.933506+00:00",
+  "node": "v24.22.1",
+  "npm": "11.9.0",
+  "install": "npm ci --ignore-scripts: passed",
+  "typecheck": "npm run typecheck: passed",
+  "test_command": "npm test",
+  "test_isolation": "none; per-test Store ownership and teardown",
+  "tests": 30,
+  "stages": [
+    {
+      "stage": "01",
+      "command": "npm run stage -- 01",
+      "tests": 3,
+      "exit_code": 0
+    },
+    {
+      "stage": "02",
+      "command": "npm run stage -- 02",
+      "tests": 3,
+      "exit_code": 0
+    },
+    {
+      "stage": "03",
+      "command": "npm run stage -- 03",
+      "tests": 3,
+      "exit_code": 0
+    },
+    {
+      "stage": "04",
+      "command": "npm run stage -- 04",
+      "tests": 4,
+      "exit_code": 0
+    },
+    {
+      "stage": "05",
+      "command": "npm run stage -- 05",
+      "tests": 4,
+      "exit_code": 0
+    },
+    {
+      "stage": "06",
+      "command": "npm run stage -- 06",
+      "tests": 6,
+      "exit_code": 0
+    },
+    {
+      "stage": "07",
+      "command": "npm run stage -- 07",
+      "tests": 4,
+      "exit_code": 0
+    },
+    {
+      "stage": "08",
+      "command": "npm run stage -- 08",
+      "tests": 3,
+      "exit_code": 0
+    }
+  ],
+  "demo": "passed: open/waiting/review",
+  "http_smoke": "passed in two independent concurrent processes, each with two boots; HTTP HTML/JSON, POST 405, 404, no duplicate Ticket, graceful child exit code 0",
+  "runner_negative_control": "intentional assertion failure returned exit code 1 and one failed test",
+  "source_sha256": {
+    "package-lock.json": "edbe0c5ef5229e701313adb872ef89fe854f33c61c252e8908a92caea5bdba05",
+    "package.json": "d97c3cec9e45636f0e5033575c3a7231152191e14f95a4a81b4b3728c7e42da1",
+    "src/demo.ts": "e9d6612017e90b9b7c270de4241d8da62b2d41934270e76e9b71413bc4c70fef",
+    "src/engine.ts": "2e3daf85bcca54515b14b79f73161ce86ecde6e3ab5bc5262188218b9d1d557e",
+    "src/model.ts": "753963cf1af640737b81d0b96ae0df7e57776bf7ea5cb465415c94f18e7f7bfe",
+    "src/policy.ts": "4fbaa822b48436a2eecacc41287bd7ed75fb735b827bf1adcabc158752898df2",
+    "src/runtime.ts": "e8f0c73cf7173a69ec01ff3066b3274f2e0873f78c179ef64561dba53401d5e8",
+    "src/server.ts": "856a4c321674817dd1e3301e83693409001b0cc99ee27992f56ff6b625588201",
+    "src/source.ts": "4fb2249b808e1f157e8e0870472a41f14360496a6ca740e2a62694fd78bc4423",
+    "src/store.ts": "14b6cd068e7eb66ba76b983c4e1e4df32b5733b2c9adadfb39ed17a97c165400",
+    "src/views.ts": "2ed94d422d34a0742607788f672d9e4f12fa526c8a3ff810477571f5a41aa737",
+    "stage.mjs": "e6d568cf03579cf6aaeda911f6305ec37c54cda851c6ac2be2ac9b08a1c58c9a",
+    "tests/01-domain.test.ts": "4734ff46277a4199c7cbc5d497626909e70de2389e2b9c3e50db1c152db53a89",
+    "tests/02-policy.test.ts": "184f6396a734868ddcb03a851647a52d64c2c542877b080ab64afcf42bf7eb9b",
+    "tests/03-admission.test.ts": "a922c8d4bca15ff34080c1d91b8038df8e714a62c5a66d4ae7b59c17714026cd",
+    "tests/04-routing.test.ts": "2595de68a3d17953d69056529827d25cbb8932c89375556528a161077df47ca1",
+    "tests/05-effects.test.ts": "859ab94f3c76f4e3994c679ab0c4e9aeb54c16df80b5c3b9d33ce8a07f2bf1ff",
+    "tests/06-runtime.test.ts": "1276da0d77813c02468d3e772ba4bf13b8a726fe76f45bd2018493bff3416514",
+    "tests/07-adapters.test.ts": "edad69077c55a106f7c44ffe5d788de878980dbdd0b82ef5b95c7c0f87703189",
+    "tests/08-views.test.ts": "e60ff36b6491908fa954cc3a697e50f7b59c5be02501f7ae9938b7ab6bb0af62",
+    "tests/data.ts": "cf92b9890befc24c63bfedc6be0ee0cbc1c9bb934f886aaa11245a3495ec6e54",
+    "tests/helpers.ts": "11a51e3b7d309b45ba4e9899ef6cd29b937e0464d19b572c45c70e6a1696c8e4",
+    "tests/http-smoke.mjs": "bc0e09bc34dff63c35147a44af25fe26beb3164e93305afcba89bec368d3c53f"
+  },
+  "not_executed": [
+    "Live DSH sessions and model provider",
+    "Live GitHub or Feishu writes",
+    "Multi-process workers and long-running operational acceptance"
+  ],
+  "focused_rechecks": [
+    "npm run stage -- 05: 4 passed after teardown hardening",
+    "npm run stage -- 06: 6 passed after teardown hardening",
+    "npm run typecheck: passed after final TypeScript edits"
+  ]
+}

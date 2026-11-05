@@ -1,0 +1,22 @@
+{
+  "name": "superagent-rebuild-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.9.0"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --test-isolation=none tests/*.test.ts",
+    "stage": "node stage.mjs",
+    "demo": "node src/demo.ts",
+    "start": "node src/server.ts",
+    "check": "npm run typecheck && npm test",
+    "smoke": "node tests/http-smoke.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "typescript": "6.0.3"
+  }
+}
