@@ -582,3 +582,6 @@ md('''## 평가 설계
 
 평가셋에 잡담, 명시 요청, 후속 취소, 같은 Thread의 새 과제, 중복 사건을 포함하세요. 처리율뿐 아니라 잘못 시작한 작업·놓친 취소·Router 호출 수·p95 응답 시간·token 사용량을 기록합니다. 원문 예비 실험 수치를 자신의 환경 성능으로 인용하지 마세요.''')], '의미 필터가 틀린 경우 두 종류(false positive/negative)를 정의하고 각각 세 사례씩 작성하세요.', '잡담을 작업으로 시작하면 false positive, 실제 오류 보고나 취소를 무시하면 false negative입니다. 단순 정확도 대신 사건 유형별 precision/recall과 사용자 개입량을 함께 비교하세요.')
 print('Generated',len(list(OUT.glob('*.ipynb'))),'notebooks')
+
+from build_prototype_materials import annotate_basics
+annotate_basics(OUT)
