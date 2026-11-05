@@ -50,6 +50,10 @@ cd /workspace/deepseek-harness/tutorials/harness-lab
 
 [Super-agent 재구현 과정](rebuild/INDEX.ko.md)은 요구사항에서 출발해 업무 모델, 권한, 구독, SQLite Effects, 실행 복구, 어댑터, 운영 화면을 단계별로 만듭니다. 01–08은 실행 가능한 참조 구현과 단계별 테스트를 제공하고, 09–10은 원본 DSH·GitHub·Feishu·운영 기능까지 확장하는 구현 지침과 완료 기준을 제공합니다. Python 노트북과 별도의 Node 환경을 사용합니다.
 
+## Claude Code/OpenCode로 간소화한 호스트 만들기
+
+[Switch Dimension 가이드 구현 과정](guide-build/INDEX.ko.md)은 `switch-dimension/deepseek-superagent-guide`의 README 명세를 기준으로 합니다. 대상 저장소에는 앱 소스가 없으므로, 결정적 gate·Ticket별 worktree/session·sa CLI·외부 코딩 Worker·조용한 Outbox·운영 패널을 새 TypeScript 참조 구현과 10단계 교재로 제공합니다. 위 DSH 프로토타입 과정과 별개의 경로입니다.
+
 ## 전체 실행 검증
 
 ```bash

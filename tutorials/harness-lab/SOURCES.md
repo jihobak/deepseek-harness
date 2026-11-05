@@ -48,3 +48,7 @@ LangChain/LangGraph API는 설치된 `uv.lock` 버전으로 실제 실행 검증
 ## 처음부터 구현하는 과정의 근거
 
 [TypeScript 재구현 과정](rebuild/INDEX.ko.md)은 공개 프로토타입을 바탕으로 교육용 구현 순서를 도출한 자료입니다. 실제 개발 이력의 재현이 아닙니다. [원본 대응표](rebuild/ORIGINAL_PARITY.ko.md)에 축소 구현과 원본 기능의 차이, 구현을 확장할 파일과 테스트를 연결합니다. 검증된 로컬 동작과 실제 provider를 연결해야 확인할 동작을 구분합니다.
+
+## Switch Dimension 가이드 구현 과정
+
+5. [switch-dimension/deepseek-superagent-guide](https://github.com/switch-dimension/deepseek-superagent-guide): 확인한 revision에는 README.md와 LICENSE만 있습니다. README가 언급한 약 2,800줄의 앱은 이 체크아웃에 포함되어 있지 않습니다. [출처 기록](guide-build/SOURCE.json), [명세 분석](guide-build/SOURCE_ANALYSIS.ko.md), [단계별 구현](guide-build/INDEX.ko.md)에 확인 사실과 새로 작성한 교육용 코드의 관계를 기록합니다. 실제 Claude/OpenCode·GitHub 연동과 비용은 검증하지 않았습니다.
