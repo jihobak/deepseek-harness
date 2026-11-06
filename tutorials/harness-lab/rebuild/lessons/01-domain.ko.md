@@ -26,4 +26,4 @@ npm run stage -- 01
 
 동일 입력의 ID 안정성, 저장소별 구분, 누락된 Thread와 잘못된 boolean 거부, 본문으로 actor를 바꿀 수 없음을 확인합니다. 실패 실험으로 repository를 ID에서 빼고 다른 저장소 사건이 충돌하는지 보세요. 원복 후 다시 통과해야 합니다.
 
-원본 대응: [core/model.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/core/model.ts), [001 Domain](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/001-domain.md), `src/sources/github.ts`. 완료되면 [02 권한 판단](02-policy.ko.md)으로 진행합니다.
+원본 대응: [core/model.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/core/model.ts), [001 Domain](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/001-domain.md), `src/sources/github.ts`. 완료되면 [02 권한 판단](02-policy.ko.md)으로 진행합니다.

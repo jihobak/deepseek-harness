@@ -2,6 +2,8 @@
 
 추천 경로는 **설계 의도 파악 → Python으로 개념 실험 → 간소화한 시스템 구현 → 공식 프로토타입의 복잡성 이해 → 실제 서비스 연결**입니다. 먼저 작은 시스템을 완성한 뒤, 어떤 요구사항이 추가될 때 더 정교한 구조가 필요한지 비교합니다.
 
+[설계별 책임 비교](DESIGN_COMPARISON.ko.md)에서 Router·Main/Eval·결정적 gate를 먼저 구분할 수 있습니다. 구현 단계에서는 [빈칸 실습과 별도 정답](practice/INDEX.ko.md)을 함께 사용하세요.
+
 ## 1. 연구 글과 자료의 관계 파악
 
 [DeepSeek X 연구 글](https://x.com/DeepSeekHarness/status/2116857257245987236?s=20)과 [00 읽기 지도](notebooks/00_reading_map.ipynb)를 읽고, [Switch Dimension 자료 분석](guide-build/SOURCE_ANALYSIS.ko.md)을 이어서 봅니다.

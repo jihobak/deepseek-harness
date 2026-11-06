@@ -22,4 +22,4 @@ npm run stage -- 03
 
 이 실습은 Trigger당 Eval 하나입니다. 원본의 Thread별 단일 Eval, batching, 전달 시점부터 시작하는 deadline, pause에 따른 시간 보정은 10에서 추가합니다. 나중에 구현할 요구사항을 단순 구현의 보장으로 적지 않습니다.
 
-원본 대응: [core/engine.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/core/engine.ts), `core/evals.ts`, `core/tickets.ts`, `app/store.ts`, `tests/core-engine.spec.ts`. 다음은 [04 후속 입력](04-routing.ko.md)입니다.
+원본 대응: [core/engine.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/core/engine.ts), `core/evals.ts`, `core/tickets.ts`, `app/store.ts`, `tests/core-engine.spec.ts`. 다음은 [04 후속 입력](04-routing.ko.md)입니다.

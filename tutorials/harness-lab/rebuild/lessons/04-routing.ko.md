@@ -20,4 +20,4 @@ npm run stage -- 04
 
 실패 실험: reached Map 대신 Thread마다 직접 전달하면 다중 Thread 테스트에서 입력이 두 개가 됩니다. 또 context-only 사람 입력에 소유권을 주면 별도 Eval이 사라집니다. 두 오류를 각각 확인한 뒤 원복하세요.
 
-원본 대응: [core/intake.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/core/intake.ts), `core/part.ts`의 소유자 판정, `tests/followups.spec.ts`, `tests/core-engine.spec.ts`. 다음은 [05 Effects](05-effects.ko.md)입니다.
+원본 대응: [core/intake.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/core/intake.ts), `core/part.ts`의 소유자 판정, `tests/followups.spec.ts`, `tests/core-engine.spec.ts`. 다음은 [05 Effects](05-effects.ko.md)입니다.

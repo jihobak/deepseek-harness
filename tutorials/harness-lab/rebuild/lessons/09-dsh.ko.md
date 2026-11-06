@@ -4,7 +4,7 @@
 
 ## 1. 원본 포트를 먼저 맞춘다
 
-[core/ports.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/core/ports.ts)를 구현의 기준으로 삼으세요. 아래 인터페이스 표는 책임을 연결하기 위한 요약이며 DSH API를 새로 정의한 것이 아닙니다.
+[core/ports.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/core/ports.ts)를 구현의 기준으로 삼으세요. 아래 인터페이스 표는 책임을 연결하기 위한 요약이며 DSH API를 새로 정의한 것이 아닙니다.
 
 |참조 구현|원본 포트·구현|교체할 내용|
 |---|---|---|
@@ -32,7 +32,7 @@
 
 ## 3. Main Session을 Assessor와 Router로 구성한다
 
-[app/sessions.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/app/sessions.ts)와 [app/assessment.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/app/assessment.ts)를 읽습니다. Main에 candidate를 전달하고 실제 전달 시점에 Eval deadline을 시작합니다. 도구의 구조화된 결과를 host에서 검증한 뒤 Engine.decide로 넘깁니다.
+[app/sessions.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/app/sessions.ts)와 [app/assessment.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/app/assessment.ts)를 읽습니다. Main에 candidate를 전달하고 실제 전달 시점에 Eval deadline을 시작합니다. 도구의 구조화된 결과를 host에서 검증한 뒤 Engine.decide로 넘깁니다.
 
 모델 입력은 bounded context와 read pointer로 구성합니다. 본문 전체를 반복해서 붙이지 말고, 원본처럼 Trigger 주변 문맥·관련 Ticket·policyVersion을 보여 주고 필요한 내용을 ID로 더 읽게 합니다. read resource의 접근 범위도 같이 구현합니다. 도구 schema만 제공하고 권한 검사를 생략하면 Worker가 다른 업무의 문맥을 읽을 수 있습니다.
 
@@ -42,8 +42,8 @@ Main의 “코드 구현을 하지 않는다”는 지침은 실제 도구 등�
 
 ## 4. Cordis bundle과 프로필로 조립한다
 
-원본은 독립적인 임의 Node 실행 진입점으로 배포되는 앱이 아니라 DSH bundle입니다. [package.json](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/package.json)의 dsh.bundle 선언, [cordis.patch.yml](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/cordis.patch.yml)의 plugin/preset 구성, [src/index.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/index.ts)의 서비스 진입점을 함께 읽으세요.
+원본은 독립적인 임의 Node 실행 진입점으로 배포되는 앱이 아니라 DSH bundle입니다. [package.json](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/package.json)의 dsh.bundle 선언, [cordis.patch.yml](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/cordis.patch.yml)의 plugin/preset 구성, [src/index.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/index.ts)의 서비스 진입점을 함께 읽으세요.
 
-구현 순서는 Runtime 서비스 등록 → GitHub Source 주입 → Main/Worker preset 연결 → client panel 등록 → setup 검증입니다. profile은 stateDir를 공급해야 합니다. 실제 설치·계정·모델·작업 디렉터리 설정은 [원본 006 Deployment](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/006-deployment.md)의 해당 revision 절차를 따르세요. 여기에는 검증하지 않은 SDK 실행 예제를 만들어 넣지 않았습니다.
+구현 순서는 Runtime 서비스 등록 → GitHub Source 주입 → Main/Worker preset 연결 → client panel 등록 → setup 검증입니다. profile은 stateDir를 공급해야 합니다. 실제 설치·계정·모델·작업 디렉터리 설정은 [원본 006 Deployment](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/006-deployment.md)의 해당 revision 절차를 따르세요. 여기에는 검증하지 않은 SDK 실행 예제를 만들어 넣지 않았습니다.
 
 이 단계의 실제 provider 실행에는 인증과 외부 전송 권한이 필요합니다. 이번 교재 제작에서는 키나 GitHub/Feishu 계정을 연결해 에이전트를 가동하지 않았습니다. 다음 [10 원본 범위 완성](10-production.ko.md)에서 남은 운영 기능을 닫습니다.

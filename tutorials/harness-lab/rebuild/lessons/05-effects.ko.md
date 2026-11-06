@@ -22,4 +22,4 @@ npm run stage -- 05
 
 원본은 effect 종류별 순서와 조용한 재시도, backoff, drain 등을 더 정교하게 다룹니다. 외부 전송의 exactly-once는 이 테이블만으로 보장되지 않으며 07에서 다룹니다.
 
-원본 대응: [app/effects.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/app/effects.ts), `app/store.ts`, `tests/effects.spec.ts`. 다음은 [06 Runtime](06-runtime.ko.md)입니다.
+원본 대응: [app/effects.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/app/effects.ts), `app/store.ts`, `tests/effects.spec.ts`. 다음은 [06 Runtime](06-runtime.ko.md)입니다.

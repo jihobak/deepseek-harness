@@ -22,4 +22,4 @@ npm run stage -- 07
 
 실제 Source 구현에서는 pagination, polling overlap, bot 계정 식별, Issue/PR·review comment·CI 사건별 안정적 ID, 삭제되거나 접근 불가한 대화의 처리를 추가합니다. Source가 외부 payload를 검증한 뒤 Engine에 정규화된 Trigger를 전달하는 방향은 유지합니다.
 
-원본 대응: [sources/github-channel.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/sources/github-channel.ts), `sources/github.ts`, `sources/github-trigger.ts`, `app/outbox.ts`, `tests/sources.spec.ts`, `tests/outbox.spec.ts`. 다음은 [08 화면](08-views.ko.md)입니다.
+원본 대응: [sources/github-channel.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/sources/github-channel.ts), `sources/github.ts`, `sources/github-trigger.ts`, `app/outbox.ts`, `tests/sources.spec.ts`, `tests/outbox.spec.ts`. 다음은 [08 화면](08-views.ko.md)입니다.

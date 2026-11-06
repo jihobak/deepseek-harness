@@ -30,4 +30,4 @@ npm run stage -- 06
 
 참조 Runtime은 직렬 소비기입니다. long-running Worker를 await하는 동안 다른 effect도 기다립니다. 따라서 원본의 full-duplex나 여러 Worker 동시 실행을 재현한다고 볼 수 없습니다. 09에서는 시작 예약과 세션 완료 callback을 분리해 이 제약을 제거합니다.
 
-원본 대응: [core/assignments.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/core/assignments.ts), `core/tickets.ts`, `app/delivery.ts`, `executor/dsh.ts`, `tests/delivery.spec.ts`, `tests/background.spec.ts`. 다음은 [07 외부 연결](07-adapters.ko.md)입니다.
+원본 대응: [core/assignments.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/core/assignments.ts), `core/tickets.ts`, `app/delivery.ts`, `executor/dsh.ts`, `tests/delivery.spec.ts`, `tests/background.spec.ts`. 다음은 [07 외부 연결](07-adapters.ko.md)입니다.

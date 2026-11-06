@@ -21,4 +21,4 @@ npm run stage -- 02
 
 실패 실험: 중복 rule ID 두 개가 하나의 matched rule인 것처럼 통과하도록 검증을 약화시키면 테스트가 실패해야 합니다. 추가 과제로 모델 설정을 Settings에 넣되 policyVersion은 변하지 않게 분리하세요.
 
-원본 대응: [policy.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/src/policy.ts), [002 Authorization](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/002-authorization.md), `tests/policy.spec.ts`, `tests/assessment.spec.ts`. 다음은 [03 승인과 작업](03-admission.ko.md)입니다.
+원본 대응: [policy.ts](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/src/policy.ts), [002 Authorization](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/002-authorization.md), `tests/policy.spec.ts`, `tests/assessment.spec.ts`. 다음은 [03 승인과 작업](03-admission.ko.md)입니다.

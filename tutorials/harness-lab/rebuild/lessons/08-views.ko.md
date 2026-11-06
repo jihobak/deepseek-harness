@@ -21,4 +21,4 @@ npm start
 
 추가 과제: failed effect의 종류와 key를 눌러 해당 Ticket 상세로 이동하게 만드세요. 무조건 재시도 버튼부터 추가하지 말고, 현재 Assignment의 retry 가능 여부를 Engine에서 계산하는 연산을 먼저 구현하세요. 버튼은 그 연산의 결과를 표시해야 합니다.
 
-원본 대응: [docs/005-panel.md](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/main/docs/005-panel.md), `src/app/cards.ts`, `src/app/resources.ts`, `src/app/views/`, `src/client/`, `tests/panel-overview.spec.tsx`. 다음은 [09 DSH 연결](09-dsh.ko.md)입니다.
+원본 대응: [docs/005-panel.md](https://github.com/deepseek-ai/dsh-superagent-prototype/blob/8c32a9dc5d72c033816c6a8110b37f40cf94fba4/docs/005-panel.md), `src/app/cards.ts`, `src/app/resources.ts`, `src/app/views/`, `src/client/`, `tests/panel-overview.spec.tsx`. 다음은 [09 DSH 연결](09-dsh.ko.md)입니다.
