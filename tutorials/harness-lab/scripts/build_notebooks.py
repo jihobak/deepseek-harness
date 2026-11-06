@@ -1,8 +1,10 @@
 from pathlib import Path
 import nbformat as n
 from textwrap import dedent
+import os
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'notebooks'
+OUT=Path(os.environ.get('HARNESS_NOTEBOOK_OUTPUT',ROOT/'notebooks'))
+OUT.mkdir(parents=True,exist_ok=True)
 ANN='https://x.com/DeepSeekHarness/status/2116857257245987236?s=20'
 SITE='https://www.deepseek.com/en/harness/'
 def md(s): return n.v4.new_markdown_cell(dedent(s).strip())
@@ -263,20 +265,24 @@ class Jobs:
             try:
                 value=await fn()
                 event={'id':job_id,'status':'completed','result':value}
-            except asyncio.CancelledError:
-                event={'id':job_id,'status':'cancelled'}
             except Exception as exc:
                 event={'id':job_id,'status':'failed','error':type(exc).__name__}
-            await self.events.put(event)
-        self.tasks[job_id]=asyncio.create_task(run())
+            return event
+        def finished(task):
+            # 실행 전 취소도 이 완료 경로에서 정확히 한 번 기록합니다.
+            event={'id':job_id,'status':'cancelled'} if task.cancelled() else task.result()
+            self.events.put_nowait(event)
+        task=asyncio.create_task(run())
+        self.tasks[job_id]=task
+        task.add_done_callback(finished)
         return {'id':job_id,'status':'started'}
     async def stop(self,job_id):
         self.tasks[job_id].cancel()
-        await self.tasks[job_id]  # 종료까지 회수
+        await asyncio.gather(self.tasks[job_id],return_exceptions=True)
     async def close(self):
         for task in self.tasks.values():
             if not task.done(): task.cancel()
-        await asyncio.gather(*self.tasks.values())
+        await asyncio.gather(*self.tasks.values(),return_exceptions=True)
 
 jobs=Jobs(); entered=asyncio.Event(); release=asyncio.Event()
 async def slow():
@@ -305,6 +311,26 @@ try:
     print(event)
 finally:
     await jobs.close()
+'''),
+code('''# 이벤트 루프에 실행 기회를 주기 전에 취소하는 경계 조건
+jobs=Jobs()
+async def never_started():
+    raise AssertionError('이 함수는 실행되면 안 됩니다')
+jobs.start('instant',never_started)
+await jobs.stop('instant')
+await jobs.close()
+assert jobs.events.get_nowait()=={'id':'instant','status':'cancelled'}
+assert jobs.events.empty()
+assert all(task.done() for task in jobs.tasks.values())
+
+jobs=Jobs()
+async def fail(): raise ValueError('실습 오류')
+jobs.start('failure',fail)
+await asyncio.gather(*jobs.tasks.values())
+await jobs.close()
+assert jobs.events.get_nowait()=={'id':'failure','status':'failed','error':'ValueError'}
+assert jobs.events.empty()
+print('즉시 취소·실패도 종료 사건을 한 번 기록하고 정리합니다.')
 '''),
 md('''## Speculative execution과 채널별 전달
 먼저 재현·분석·초안 작성 같은 작업을 수행하고, 유용성이 확인될 때만 결과를 전달합니다. 아래는 외부 전송 없이 메시지 문자열만 생성합니다. Worker의 상세 로그는 내부에 두고 Router가 채널에 맞게 응답합니다. 100단어 제한은 원문이 IM에서 실험한 규칙이며 한국어 문자 수 규칙과 같지 않습니다.'''),

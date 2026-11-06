@@ -2,9 +2,11 @@
 from pathlib import Path
 from textwrap import dedent
 import nbformat as n
+import os
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'notebooks'
-URL='https://github.com/deepseek-ai/dsh-superagent-prototype'
+OUT=Path(os.environ.get('HARNESS_NOTEBOOK_OUTPUT',ROOT/'notebooks'))
+OUT.mkdir(parents=True,exist_ok=True)
+URL='https://github.com/deepseek-ai/dsh-superagent-prototype/tree/8c32a9dc5d72c033816c6a8110b37f40cf94fba4'
 def md(s): return n.v4.new_markdown_cell(dedent(s).strip())
 def code(s): return n.v4.new_code_cell(dedent(s).strip())
 def save(name,title,source,cells):
@@ -154,9 +156,11 @@ from contextlib import closing
 workspace=tempfile.TemporaryDirectory()
 path=Path(workspace.name)/'effects.sqlite'
 db=sqlite3.connect(path)
-db.executescript('''+repr('CREATE TABLE tickets(id TEXT PRIMARY KEY); CREATE TABLE effect(kind TEXT,key TEXT,payload TEXT,generation INTEGER,PRIMARY KEY(kind,key));')+''')
+db.executescript('''+repr('CREATE TABLE tickets(id TEXT PRIMARY KEY); CREATE TABLE effect(seq INTEGER PRIMARY KEY AUTOINCREMENT,kind TEXT,key TEXT,payload TEXT,generation INTEGER,UNIQUE(kind,key));')+''')
 def enqueue(c,key,payload):
-    c.execute("INSERT INTO effect VALUES ('reply',?,?,1) ON CONFLICT(kind,key) DO UPDATE SET payload=excluded.payload,generation=effect.generation+1",(key,payload))
+    c.execute("INSERT INTO effect(kind,key,payload,generation) VALUES ('reply',?,?,1) ON CONFLICT(kind,key) DO UPDATE SET payload=excluded.payload,generation=effect.generation+1",(key,payload))
+def complete(c,key,seq,generation):
+    return c.execute("DELETE FROM effect WHERE kind='reply' AND key=? AND seq=? AND generation=?",(key,seq,generation)).rowcount
 try:
     with db:
         db.execute('INSERT INTO tickets VALUES (?)',('rollback',))
@@ -168,12 +172,20 @@ assert db.execute('SELECT count(*) FROM effect').fetchone()[0]==0
 with db:
     db.execute('INSERT INTO tickets VALUES (?)',('t1',))
     enqueue(db,'r1','version 1')
-old=db.execute('SELECT generation FROM effect WHERE key=?',('r1',)).fetchone()[0]
+old=db.execute('SELECT seq,generation FROM effect WHERE key=?',('r1',)).fetchone()
 with db: enqueue(db,'r1','version 2')
 with db:
-    deleted=db.execute('DELETE FROM effect WHERE key=? AND generation=?',('r1',old)).rowcount
+    deleted=complete(db,'r1',*old)
 assert deleted==0
 assert db.execute('SELECT payload FROM effect').fetchone()[0]=='version 2'
+with db:
+    # 같은 key를 제거한 뒤 재등록하면 generation은 같아도 seq가 다릅니다.
+    enqueue(db,'reused','old request')
+    removed=db.execute('SELECT seq,generation FROM effect WHERE key=?',('reused',)).fetchone()
+    assert complete(db,'reused',*removed)==1
+    enqueue(db,'reused','new request')
+    assert complete(db,'reused',*removed)==0
+    assert db.execute('SELECT payload FROM effect WHERE key=?',('reused',)).fetchone()[0]=='new request'
 db.close()
 with closing(sqlite3.connect(path)) as fresh:
     assert fresh.execute('SELECT payload FROM effect').fetchone()[0]=='version 2'
