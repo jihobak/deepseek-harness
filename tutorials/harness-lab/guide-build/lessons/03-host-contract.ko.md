@@ -20,4 +20,6 @@ Outbox 예약과 report 상태 변경은 같은 트랜잭션에 둡니다. 잘�
 
 이 검증은 sa를 거친 요청을 통제합니다. Worker가 가진 GitHub 토큰으로 직접 API를 부르는 것까지 막는 sandbox는 아닙니다. 실제 배포에서는 계정 권한·파일·네트워크 접근 범위를 별도로 제한합니다.
 
+인증 저장소는 src/tokens.ts에 독립되어 Executor 없이 학습할 수 있습니다. ack는 Trigger별 한 번이며, reply/report는 같은 turn·대상·종류·본문의 재전송을 합치고 다른 본문은 별도 메시지로 기록합니다. handback된 입력은 원래 Worker의 다음 batch와 복구에서 제외하며 다른 구독자에게 중복 전달하지 않습니다.
+
 다음: [04 Worker 어댑터](04-workers.ko.md).

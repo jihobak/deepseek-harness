@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {spawn,execFileSync} from 'node:child_process';
 import {mkdtemp,rm,readFile} from 'node:fs/promises';
+import {existsSync} from 'node:fs';
 import {tmpdir} from 'node:os';import {join} from 'node:path';import {fileURLToPath} from 'node:url';
 import {setTimeout as delay} from 'node:timers/promises';
 const root=await mkdtemp(join(tmpdir(),'guide-smoke-'));
@@ -40,8 +41,16 @@ try{
   const question=await until(server,s=>s.tickets.find(t=>t.id===blockedId&&t.stage==='awaiting-answer'&&!t.running));
   await server.post('@lab-bot stop',question.thread);assert.equal((await server.post('please continue',question.thread)).kind,'ignored');
   const stopped=(await server.state()).tickets.find(t=>t.id===blockedId);assert.equal(stopped.ended,'human');assert.equal(stopped.turn,1);
+  const interrupted=await server.post('fixture:hold');const interruptedId=interrupted.tickets[0];
+  const marker=join(root,'worktrees',interruptedId,'.fixture-running');
+  await until(server,s=>s.tickets.some(t=>t.id===interruptedId&&t.running)&&existsSync(marker));
+  const workerPid=Number(await readFile(marker,'utf8'));
   assert.deepEqual(await server.stop(),{code:0,signal:null});server=undefined;
-  server=await boot();const restored=await server.state();assert.equal(restored.tickets.length,2);assert.equal(restored.tickets.find(t=>t.id===id).sessionId,done.sessionId);
+  assert.throws(()=>process.kill(workerPid,0),{code:'ESRCH'});
+  server=await boot();const restored=await server.state();assert.equal(restored.tickets.length,3);assert.equal(restored.tickets.find(t=>t.id===id).sessionId,done.sessionId);
+  await until(server,s=>s.tickets.some(t=>t.id===interruptedId&&t.turn===2&&t.ended==='completed'&&!t.running));
+  const recovered=JSON.parse((await readFile(join(root,'worktrees',interruptedId,'agent-result.txt'),'utf8')).trim());
+  assert.match(recovered.message,/Restart recovery:/);assert.match(recovered.message,/fixture:hold/);
   assert.deepEqual(await server.stop(),{code:0,signal:null});server=undefined;
-  console.log('PASS: real worktree and two commits, same session/branch, sa HTTP token, blocked/stop, foreign-origin rejection, restart');
+  console.log('PASS: real worktree and commits, same session/branch, sa authentication, blocked/stop, SIGTERM worker reaping and interrupted-input recovery');
 }finally{if(server)await server.stop();await rm(root,{recursive:true,force:true});}

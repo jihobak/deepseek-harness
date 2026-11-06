@@ -1,6 +1,6 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {mkdtemp,rm} from 'node:fs/promises';import {tmpdir} from 'node:os';import {join} from 'node:path';
-import {runProcess} from '../src/process.ts';import {git,prepare} from '../src/workspace.ts';import {fixture,trigger} from './helpers.ts';import {Executor,Tokens} from '../src/executor.ts';
+import {runProcess} from '../src/process.ts';import {git,prepare} from '../src/workspace.ts';import {fixture,trigger} from './helpers.ts';import {Executor} from '../src/executor.ts';import {Tokens} from '../src/tokens.ts';
 test('worktree preparation reuses the branch and refuses a mismatched existing directory',async t=>{const root=await mkdtemp(join(tmpdir(),'guide-git-'));t.after(()=>rm(root,{recursive:true,force:true}));
   await git(root,['init','-b','main']);await git(root,['-c','user.name=Test','-c','user.email=test@example.invalid','commit','--allow-empty','-m','seed']);
   const f=fixture(t);const id=f.create();const ticket={...f.engine.ticket(id),directory:join(root,'work')};await prepare(root,'HEAD',ticket);await prepare(root,'HEAD',ticket);

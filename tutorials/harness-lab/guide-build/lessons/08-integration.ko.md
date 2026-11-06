@@ -27,4 +27,6 @@ smoke는 별도 임시 stateDir와 OS 할당 포트를 사용하며 다음을 �
 
 중요한 실패 실험은 전송 성공 뒤 receipt 기록 전 crash입니다. 로컬 Sender는 같은 ID의 기록을 덮어쓰지만, 실제 GitHub 댓글은 같은 방식으로 취급할 수 없습니다. 이를 live Sender의 별도 검증으로 남깁니다.
 
+정상 종료는 Worker 실패와 구분합니다. token을 먼저 무효화하고 Engine.interrupt로 미완료 batch와 recovery note를 보존한 뒤 프로세스를 중단·회수합니다. 늦은 완료는 이 상태를 덮어쓰지 못합니다. smoke의 fixture:hold는 실행 중인 자식의 준비 신호를 확인한 뒤 SIGTERM·재부팅·입력 복원을 검사하며, 사람 stop은 계속 자동 재개하지 않습니다.
+
 다음: [09 실제 연결](09-deployment.ko.md).

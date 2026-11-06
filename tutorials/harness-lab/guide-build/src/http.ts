@@ -4,7 +4,8 @@ import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { Engine,stage } from './engine.ts';
 import { mention } from './github.ts';
-import type { Executor,Tokens } from './executor.ts';
+import type { Executor } from './executor.ts';
+import type { Tokens } from './tokens.ts';
 import type { Message,Ticket } from './model.ts';
 async function body(request:IncomingMessage):Promise<unknown>{
   if(!request.headers['content-type']?.startsWith('application/json'))throw new Error('application/json required');

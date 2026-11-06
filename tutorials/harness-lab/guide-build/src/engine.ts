@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { join } from 'node:path';
 import { TriggerSchema, WorkerCommand } from './model.ts';
 import type { Command, Config, Message, Ticket, Trigger } from './model.ts';
@@ -37,6 +37,7 @@ export class Engine {
       (!t.ended || this.config.allow.some(a=>same(a,t.requester))));
     if (targets.length) {
       for (const t of targets) {
+        if (t.inputs.some(i => i.trigger.id === trigger.id)) continue;
         if (!trigger.bot) delete t.ended;
         t.inputs.push({trigger,consumed:false});
         const wake=!trigger.bot || (!['blocked','failed'].includes(t.report) && trigger.ci!=='pass');
@@ -59,7 +60,7 @@ export class Engine {
     return this.store.atomic(()=>{
       const t=this.ticket(id); if(t.ended || t.running || !t.wake) throw new Error('ticket cannot start');
       t.turn++; t.running=true; t.wake=false; t.humanWake=false;
-      this.store.put('batch',`${id}/${t.turn}`,t.inputs.filter(i=>!i.consumed));
+      this.store.put('batch',`${id}/${t.turn}`,t.inputs.filter(i=>!i.consumed&&!i.handedBack));
       t.inputs.forEach(i=>{i.consumed=true;}); this.store.put('ticket',id,t); return t;
     });
   }
@@ -72,6 +73,10 @@ export class Engine {
     this.store.put('counter','message',order);
     this.store.put('message',key,{id:key,order,ticketId:t.id,thread:target.trigger.thread,text,purpose,state:'pending',attempts:0,due:0} satisfies Message);
   }
+  /** Distinct content is a new message; an exact retry keeps its delivery state. */
+  private contentKey(prefix: string, to: string, text: string): string {
+    return `${prefix}/${createHash('sha256').update(JSON.stringify([to,text])).digest('hex')}`;
+  }
   command(id: string,turn: number,raw: unknown): unknown {
     const c=WorkerCommand.parse(raw);
     return this.store.atomic(()=>{
@@ -80,13 +85,15 @@ export class Engine {
       if(c.command==='show') return t;
       if(c.command==='ack' || c.command==='reply') {
         const to=c.to??t.origin;
-        this.message(t,to,c.text,c.command==='ack'?'ack':'answer',c.command==='ack'?`${id}/ack/${to}`:`${id}/answer/${turn}/${to}`);
+        this.message(t,to,c.text,c.command==='ack'?'ack':'answer',c.command==='ack'?`${id}/ack/${to}`:this.contentKey(`${id}/answer/${turn}`,to,c.text));
         return {ok:true};
       }
       if(c.command==='handback') {
         const input=t.inputs.find(i=>i.trigger.id===c.trigger);
         if(!input || input.handedBack || input.trigger.id===t.origin) throw new Error('cannot hand back this trigger');
-        input.handedBack=true; this.store.put('ticket',id,t);
+        input.handedBack=true; input.consumed=true;
+        if (!t.inputs.some(i=>!i.consumed&&!i.handedBack)) { t.wake=false; t.humanWake=false; }
+        this.store.put('ticket',id,t);
         const result=this.route(input.trigger,id);
         this.store.put('handback',`${id}/${c.trigger}`,{reason:c.reason,result}); return result;
       }
@@ -102,24 +109,26 @@ export class Engine {
     t.report=c.status; t.reportedTurn=t.turn; t.summary=c.summary??''; t.question=c.question??'';
     const message=c.message||(c.status==='blocked'?c.question:undefined);
     if(message && c.status!=='dropped') this.message(t,c.to??t.origin,message,
-      c.status==='blocked'||c.status==='failed'?'attention':'result',`${t.id}/report/${t.turn}/${c.status}`);
+      c.status==='blocked'||c.status==='failed'?'attention':'result',this.contentKey(`${t.id}/report/${t.turn}/${c.status}`,c.to??t.origin,message));
     if(c.status==='dropped') t.ended='dropped';
     if(c.status==='ready' && !t.prs.length && !t.wake) t.ended='completed';
-    this.endForPRs(t);
+    if(c.status==='ready') this.endForPRs(t);
   }
   closePR(number: number,state:'merged'|'closed'): void {
     this.store.atomic(()=>{for(const t of this.store.all<Ticket>('ticket')) {
-      const pr=t.prs.find(p=>p.number===number); if(!pr || t.ended==='human') continue;
-      pr.state=state; this.endForPRs(t); this.store.put('ticket',t.id,t);
+      const pr=t.prs.find(p=>p.number===number); if(!pr || t.ended==='human' || pr.state===state) continue;
+      pr.state=state;
+      if(!t.running) this.endForPRs(t);
+      this.store.put('ticket',t.id,t);
     }});
   }
   private endForPRs(t: Ticket): void {
-    if(t.wake && t.inputs.some(i=>!i.consumed&&!i.trigger.bot))return;
+    if(t.inputs.some(i=>!i.consumed&&!i.handedBack&&!i.trigger.bot))return;
     if(t.prs.length && t.prs.every(p=>p.state!=='open')) t.ended=t.prs.every(p=>p.state==='merged')?'merged':'closed';
   }
   finish(id:string,turn:number,result:{ok:boolean;sessionId?:string;error?:string;transient?:boolean},now:number):void {
     this.store.atomic(()=>{
-      const t=this.ticket(id); if(t.turn!==turn) return;
+      const t=this.ticket(id); if(t.turn!==turn || !t.running) return;
       if(result.sessionId) {t.sessionId=result.sessionId;t.sessionEstablished=true;}
       t.running=false;
       if(!t.ended && !result.ok && result.transient && t.retries<3) {
@@ -134,12 +143,25 @@ export class Engine {
   }
   private restoreBatch(t:Ticket):void {
     const batch=this.store.get<Ticket['inputs']>('batch',`${t.id}/${t.turn}`)??[];
-    for(const item of t.inputs) if(batch.some(b=>b.trigger.id===item.trigger.id)) item.consumed=false;
+    for(const item of t.inputs) if(!item.handedBack && batch.some(b=>b.trigger.id===item.trigger.id)) item.consumed=false;
+  }
+  /** Host shutdown preserves pending work; a person's stop remains terminal. */
+  interrupt(id:string,turn:number):void {
+    this.store.atomic(()=>{
+      const t=this.ticket(id); if(!t.running || t.turn!==turn) return;
+      this.interruptInside(t); this.store.put('ticket',id,t);
+    });
+  }
+  private interruptInside(t:Ticket):void {
+    t.running=false;
+    if(!t.ended) {
+      this.restoreBatch(t); t.wake=true;
+      t.recovery='Restart recovery: check git history, directory and GitHub before repeating actions. Interrupted inputs are included below.';
+    }
   }
   recover():void {
     this.store.atomic(()=>{for(const t of this.store.all<Ticket>('ticket')) {
-      if(!t.running) continue; t.running=false;
-      if(!t.ended) {this.restoreBatch(t);t.wake=true;t.recovery='Restart recovery: check git history, directory and GitHub before repeating actions. Interrupted inputs are included below.';}
+      if(!t.running) continue; this.interruptInside(t);
       this.store.put('ticket',t.id,t);
     }});
   }

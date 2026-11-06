@@ -31,4 +31,6 @@ npm run stage -- 02
 
 검증 질문: PR을 만들었다는 사실과 검토할 준비가 됐다는 사실을 어떤 필드로 구분합니까? 새 댓글로 재개했을 때 Session ID와 branch가 바뀌지 않습니까? stop 뒤 새로 명시적으로 요청한 별도 Ticket과 기존 Ticket의 자동 재개를 구분합니까?
 
+PR의 같은 종료 상태를 반복 수집하는 것은 새 종료 사건이 아닙니다. 재개한 turn의 progress/waiting/blocked는 과거 PR 때문에 종료되지 않으며 ready 보고에서 완료 조건을 다시 판단합니다. 실행 중 도착한 PR 종료도 현재 turn을 즉시 끝내지 않습니다.
+
 다음: [03 sa와 호스트](03-host-contract.ko.md).

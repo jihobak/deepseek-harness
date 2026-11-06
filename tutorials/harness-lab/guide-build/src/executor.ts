@@ -1,4 +1,3 @@
-import { randomBytes,createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { delimiter } from 'node:path';
@@ -6,19 +5,13 @@ import { Engine } from './engine.ts';
 import type { Ticket } from './model.ts';
 import { prepare } from './workspace.ts';
 import type { Worker } from './worker.ts';
-export class Tokens {
-  readonly values=new Map<string,{id:string;turn:number}>();
-  issue(id:string,turn:number):string{const token=randomBytes(32).toString('hex');this.values.set(this.hash(token),{id,turn});return token;}
-  resolve(token:string){return this.values.get(this.hash(token));}
-  revoke(token:string):void{this.values.delete(this.hash(token));}
-  private hash(token:string):string{return createHash('sha256').update(token).digest('hex');}
-}
+import type { Tokens } from './tokens.ts';
 /** N ordinary slots plus a reserved slot for a human follow-up to an existing ticket. */
 export class Executor {
   readonly engine:Engine;readonly worker:Worker;readonly tokens:Tokens;
   readonly repo:string;readonly base:string;readonly max:number;readonly prepareWorkspace:typeof prepare;
   url='';closing=false;
-  readonly active=new Map<string,{controller:AbortController;promise:Promise<void>}>();
+  readonly active=new Map<string,{controller:AbortController;promise:Promise<void>;token:string;turn:number}>();
   constructor(engine:Engine,worker:Worker,tokens:Tokens,repo:string,base='HEAD',max=2,prepareWorkspace:typeof prepare=prepare){
     if(!Number.isInteger(max)||max<1)throw new Error('invalid worker limit');
     this.engine=engine;this.worker=worker;this.tokens=tokens;this.repo=repo;this.base=base;this.max=max;this.prepareWorkspace=prepareWorkspace;
@@ -34,12 +27,13 @@ export class Executor {
       const started=this.engine.begin(t.id),controller=new AbortController();
       const token=this.tokens.issue(t.id,started.turn);
       const promise=this.execute(started,token,controller.signal).finally(()=>{this.tokens.revoke(token);this.active.delete(t.id);});
-      this.active.set(t.id,{controller,promise});
+      this.active.set(t.id,{controller,promise,token,turn:started.turn});
     }
   }
   private async execute(t:Ticket,token:string,signal:AbortSignal):Promise<void>{
     try{
       await this.prepareWorkspace(this.repo,this.base,t);
+      if(signal.aborted) return;
       const inputs=this.engine.store.get<Ticket['inputs']>('batch',`${t.id}/${t.turn}`)??[];
       const message=[t.recovery,...inputs.map(i=>`Trigger id: ${i.trigger.id}\n${i.trigger.bot?'Context':'Person'} @${i.trigger.actor}: ${i.trigger.text}`)].filter(Boolean).join('\n\n');
       const instructions=await readFile(new URL('../prompts/worker.md',import.meta.url),'utf8');
@@ -49,5 +43,13 @@ export class Executor {
       const result=await this.worker.run({ticket:t,message,instructions,env,signal});this.engine.finish(t.id,t.turn,result,Date.now());
     }catch(error){this.engine.finish(t.id,t.turn,{ok:false,error:error instanceof Error?error.message:String(error)},Date.now());}
   }
-  async close():Promise<void>{this.closing=true;for(const job of this.active.values())job.controller.abort();await Promise.all([...this.active.values()].map(j=>j.promise));}
+  async close():Promise<void>{
+    this.closing=true;
+    for(const [id,job] of this.active){
+      this.tokens.revoke(job.token);
+      this.engine.interrupt(id,job.turn);
+      job.controller.abort();
+    }
+    await Promise.all([...this.active.values()].map(j=>j.promise));
+  }
 }

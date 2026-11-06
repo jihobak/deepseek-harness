@@ -1,4 +1,4 @@
-import { appendFile } from 'node:fs/promises';
+import { appendFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { runProcess } from './process.ts';
 import { git } from './workspace.ts';
@@ -9,6 +9,10 @@ async function call(args:string[]):Promise<void>{
   const r=await runProcess(process.execPath,[sa,...args],{cwd,env:process.env});if(r.code!==0)throw new Error(r.stderr);
 }
 await call(['ack','Local fixture: recording and committing this turn.']);
+if(turn.message.includes('fixture:hold') && !turn.message.includes('Restart recovery:')) {
+  await writeFile('.fixture-running',String(process.pid));
+  await new Promise<void>(()=>{setInterval(()=>{},1000);});
+}
 if(turn.message.includes('fixture:block')) {
   await call(['report','blocked','--question','Which fixture target should be used?']);
 } else {
