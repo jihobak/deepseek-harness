@@ -2,6 +2,8 @@
 
 한국어 설명, 실행 코드, 검증문, 수정 과제와 해설을 담은 **12개 독립 실행 노트북**입니다. API 키 없이 LangChain 도구와 LangGraph의 상태 그래프·체크포인트·interrupt를 직접 실행합니다. 약 6~8시간을 예상하며 Python 함수·타입 힌트·기초 async 이해를 권장합니다.
 
+Python 노트북과 두 TypeScript 과정을 어떤 순서로 진행할지는 [전체 추천 학습 순서](LEARNING_PATH.ko.md)를 먼저 보세요. 단계별 이유와 다음 단계로 넘어갈 기준을 함께 설명합니다.
+
 ## 먼저 구분할 것
 
 - X의 *Exploring Super-agent Design: Towards a More Autonomous Agent System*은 **설계 아이디어**를 설명하며, 기존 제품 기능 소개가 아니라고 명시합니다. 영문은 원문에 표시된 기계 번역입니다.
