@@ -1,0 +1,50 @@
+name: Harness lab
+
+on:
+  push:
+    paths:
+      - 'tutorials/harness-lab/**'
+      - '.github/workflows/harness-lab.yml'
+      - 'package.json'
+  pull_request:
+    paths:
+      - 'tutorials/harness-lab/**'
+      - '.github/workflows/harness-lab.yml'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  keyless-course:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RUN_LIVE: '0'
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v6.3.0
+        with:
+          python-version: '3.12'
+      - name: Install uv and the locked notebook environment
+        run: |
+          python -m pip install uv==0.13.4
+          bash tutorials/harness-lab/setup.sh
+      - name: Install the independent TypeScript labs
+        run: |
+          npm --prefix tutorials/harness-lab/guide-build ci --ignore-scripts
+          npm --prefix tutorials/harness-lab/rebuild ci --ignore-scripts
+      - name: Validate notebooks, code, exercises and answers
+        run: node tutorials/harness-lab/scripts/check.mjs
+      - name: Ensure validation did not rewrite course files
+        run: git diff --exit-code

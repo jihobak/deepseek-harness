@@ -15,7 +15,9 @@
 ./start.sh
 ```
 
-选择 `Python (Harness Lab)` 内核。每个 Notebook 均可独立运行。使用 `UV_CACHE_DIR="$PWD/.uv-cache" uv run --frozen python scripts/validate_notebooks.py` 验证所有 Notebook；该命令写入执行后的 Notebook 和 `validation.json`，并明确跳过真实模型请求。[可选模型 Notebook](notebooks/08_optional_live_model.ipynb)说明独立的凭据和网络要求。
+选择 `Python (Harness Lab)` 内核。每个 Notebook 均可独立运行。使用 `UV_CACHE_DIR="$PWD/.uv-cache" uv run --frozen python scripts/validate_notebooks.py` 验证所有 Notebook；该命令不修改 Notebook，并明确跳过真实模型请求。添加 `--write` 可保存执行后的 Notebook 和 `validation.json`。[可选模型 Notebook](notebooks/08_optional_live_model.ipynb)说明独立的凭据和网络要求。
+
+[填空练习](practice/INDEX.ko.md)为十六个 TypeScript 阶段提供独立答案。安装两个 TypeScript 项目的依赖后，在仓库根目录运行 `pnpm run check:harness-lab` 验证整个课程。
 
 ## 限制
 

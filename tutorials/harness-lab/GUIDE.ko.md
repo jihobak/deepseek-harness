@@ -63,11 +63,15 @@ cd /workspace/deepseek-harness/tutorials/harness-lab
 UV_CACHE_DIR="$PWD/.uv-cache" uv run --frozen python scripts/validate_notebooks.py
 ```
 
-노트북마다 **새 커널**을 열어 모든 코드 셀을 실행하고, 오류나 assert 실패 시 즉시 실패합니다. 성공 시 실행 결과가 노트북에 저장되고 `validation.json`에 셀 수와 시간이 기록됩니다. 선택적 실제 모델 셀은 검증기가 `RUN_LIVE=0`으로 실행하므로 **명시적으로 건너뜁니다**. 중간 실패 때 과거 report를 성공 근거로 읽지 않도록 검증기는 기존 report를 제거하고 시작합니다.
+노트북마다 **새 커널**을 열어 모든 코드 셀을 실행하고, 오류나 assert 실패 시 즉시 실패합니다. 기본 검증은 노트북과 기존 report를 변경하지 않습니다. `--write`를 지정하면 실행 결과와 `validation.json`을 저장하고, `--report /tmp/report.json`으로 별도 보고서를 만들 수 있습니다. 선택적 실제 모델 셀은 검증기가 `RUN_LIVE=0`으로 실행하므로 **명시적으로 건너뜁니다**. 보고서를 저장하는 모드에서는 지정한 이전 report를 제거하고 시작하므로 중간 실패를 과거 성공 기록과 혼동하지 않습니다.
 
 학습자는 개념 설명 → 예상 결과 적기 → 실행 → assert 설명 → 수정 과제 순서로 진행하세요. 과제 해설은 마지막에 있습니다. 자동 검증은 제공된 예제를 검증하며 독자가 작성한 모든 확장 과제를 채점하지는 않습니다.
 
 `scripts/build_notebooks.py`는 00–08 생성기이며, `scripts/build_prototype_materials.py`는 09–11 생성기입니다. 두 생성기는 기존 실습에 프로토타입 차이 안내를 유지합니다. 실행하면 학습자가 수정한 노트북과 실행 결과를 덮어쓰므로 재생성은 필요할 때만 하세요. 수정한 실습은 별도 사본에 보관하세요.
+
+## 교재 전체 검사
+
+[빈칸 실습과 별도 정답](practice/INDEX.ko.md), [설계별 책임 비교](DESIGN_COMPARISON.ko.md)를 함께 제공합니다. 두 TS 과정에서 `npm ci --ignore-scripts`를 실행하고 Python `setup.sh`를 마친 뒤 저장소 루트에서 `pnpm run check:harness-lab`을 실행하세요. 노트북, 타입 검사, 회귀 테스트, HTTP smoke, 16단계 정답과 28개 개별 빈칸 실패, 생성물·링크를 검사합니다. 파일을 덮어쓰지 않으며 실제 provider는 호출하지 않습니다. 같은 검사를 교재 전용 GitHub Actions에서도 실행합니다.
 
 ## 실제 모델을 쓰려면
 

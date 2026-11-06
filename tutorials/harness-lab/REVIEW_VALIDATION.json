@@ -1,0 +1,30 @@
+{
+  "recorded_at_utc": "2026-11-06T10:26:24.807840+00:00",
+  "command": "corepack pnpm run check:harness-lab",
+  "result": "passed",
+  "notebooks": 12,
+  "code_cells": 26,
+  "typescript_tests": {
+    "guide-build": 41,
+    "rebuild": 30
+  },
+  "practice": {
+    "solved_stages": 16,
+    "independent_blank_negative_controls": 28,
+    "all_blank_starter_negative_controls": 16
+  },
+  "material_guard_negative_controls": 3,
+  "relative_file_links": 230,
+  "additional_checks": {
+    "corepack pnpm run test:docs": "21 passed",
+    "corepack pnpm run doc-sync": "43 passed",
+    "corepack pnpm run build": "10 gates passed; official Node v24.22.1 distribution with headers",
+    "corepack pnpm run lint": "passed; existing unused oxlint-disable warning at packages/experimental/client-ui-cot-translation/src/index.ts:82",
+    "concurrent guide-build smoke processes": "2 passed"
+  },
+  "not_executed": [
+    "Live model providers and Claude/OpenCode CLI",
+    "Remote GitHub or Feishu writes",
+    "Remote GitHub Actions status"
+  ]
+}

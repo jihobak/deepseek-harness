@@ -94,5 +94,7 @@
     "npm run stage -- 05: 4 passed after teardown hardening",
     "npm run stage -- 06: 6 passed after teardown hardening",
     "npm run typecheck: passed after final TypeScript edits"
-  ]
+  ],
+  "latest_recheck_utc": "2026-11-06T10:26:24.807840+00:00",
+  "latest_recheck_command": "corepack pnpm run check:harness-lab"
 }
