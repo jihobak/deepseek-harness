@@ -27,6 +27,10 @@ npm start
 
 상태는 `.state/`에 저장됩니다. Ctrl+C로 종료하면 Worker 정리와 서버 종료를 기다린 뒤 lock을 해제합니다. 강제 종료로 `host.lock`이 남으면 해당 호스트 프로세스가 종료되었는지 확인한 뒤 그 lock만 제거하세요. 자동 stale-lock 판정은 구현하지 않았습니다. 필요하면 `LAB_STATE`로 별도 실습 디렉터리, `LAB_PORT`로 다른 포트를 지정할 수 있습니다. 테스트는 OS가 배정한 임시 포트와 별도 임시 디렉터리를 씁니다.
 
+## 빈칸 실습과 별도 정답
+
+[단계별 실습](../practice/INDEX.ko.md)은 주변 코드와 테스트를 제공하고 핵심 로직을 직접 채우게 합니다. 01–08의 문제와 정답·해설을 분리했으며, 각 단계의 정답 프로젝트도 별도 경로에 생성할 수 있습니다.
+
 ## 처음부터 직접 작성하기
 
 먼저 완성된 앱과 테스트를 실행해 관찰할 동작을 확인하세요. 그 다음 별도 빈 프로젝트에 package.json, package-lock.json, tsconfig.json, stage.mjs와 tests를 복사하고 `src/`를 단계별로 작성합니다. 참조 `src/`는 정답을 비교할 때 사용합니다. 아직 구현하지 않은 미래 단계의 전체 타입 검사를 통과시키려 하지 말고, 현재 단계 테스트부터 통과시키세요.
@@ -53,6 +57,8 @@ npm run stage -- 03
 npm run stage -- 04
 npm run stage -- 05
 npm run stage -- 06
+npm run stage -- 07
+npm run stage -- 08
 ```
 
 ## 전체 구조

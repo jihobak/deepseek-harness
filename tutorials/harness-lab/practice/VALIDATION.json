@@ -1,0 +1,127 @@
+{
+  "recorded_at_utc": "2026-11-06T10:26:24.807840+00:00",
+  "command": "corepack pnpm run check:harness-lab",
+  "solved_stages": 16,
+  "independent_blank_negative_controls": 28,
+  "all_blank_starter_negative_controls": 16,
+  "existing_destination_preserved": true,
+  "stages": [
+    {
+      "course": "guide-build",
+      "stage": "01",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    },
+    {
+      "course": "guide-build",
+      "stage": "02",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    },
+    {
+      "course": "guide-build",
+      "stage": "03",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    },
+    {
+      "course": "guide-build",
+      "stage": "04",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    },
+    {
+      "course": "guide-build",
+      "stage": "05",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    },
+    {
+      "course": "guide-build",
+      "stage": "06",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    },
+    {
+      "course": "guide-build",
+      "stage": "07",
+      "answer": "passed",
+      "independent_gap_failures": 1,
+      "starter": "expected failure"
+    },
+    {
+      "course": "guide-build",
+      "stage": "08",
+      "answer": "passed",
+      "independent_gap_failures": 1,
+      "starter": "expected failure"
+    },
+    {
+      "course": "rebuild",
+      "stage": "01",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    },
+    {
+      "course": "rebuild",
+      "stage": "02",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    },
+    {
+      "course": "rebuild",
+      "stage": "03",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    },
+    {
+      "course": "rebuild",
+      "stage": "04",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    },
+    {
+      "course": "rebuild",
+      "stage": "05",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    },
+    {
+      "course": "rebuild",
+      "stage": "06",
+      "answer": "passed",
+      "independent_gap_failures": 1,
+      "starter": "expected failure"
+    },
+    {
+      "course": "rebuild",
+      "stage": "07",
+      "answer": "passed",
+      "independent_gap_failures": 1,
+      "starter": "expected failure"
+    },
+    {
+      "course": "rebuild",
+      "stage": "08",
+      "answer": "passed",
+      "independent_gap_failures": 2,
+      "starter": "expected failure"
+    }
+  ],
+  "source_sha256": {
+    "practice/catalog.json": "c6826079eb196a136e7b7b5fc6ec4893fa3c2f631e4ca21fdf767fa9e10b808e",
+    "scripts/practice.py": "bbb904c1daae63e403d7cb4e0dee172c9eb1ab040ea75f2bdcde88aef518bb59",
+    "scripts/validate_practice.py": "ee289a9b84578cad343f1cb4842b624b4dafba87e69bbe8c7064d9c28f17ea92"
+  }
+}
